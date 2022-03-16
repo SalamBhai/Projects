@@ -1,0 +1,36 @@
+* {
+    box-sizing: content-box;
+    padding: 0px;
+    margin: 0px;
+    user-select: none;
+}
+
+body {
+    background-color: silver;
+}
+
+.landing {
+    background-color: silver;
+    height: 96vh;
+    width: 92vw;
+    justify-content: center;
+    overflow-x: hidden;
+}
+
+.frontItems {
+    list-style-type: none;
+    justify-content: center;
+    position: relative;
+    bottom: -290px;
+    right: -250px;
+    font-family: "Lucida Calligraphy";
+    font-weight: bolder;
+    color: blue;
+    animation-delay: 0.4s;
+    font-size: 66px;
+}
+
+#The {
+    margin-bottom: 12px;
+    text-shadow: hoff voff blur blue;
+}
