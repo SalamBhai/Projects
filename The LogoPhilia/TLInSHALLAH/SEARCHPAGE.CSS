@@ -78,7 +78,7 @@
                     justify-self: center;
                     width: 90vw;
                     position: relative;
-                    top: -780px;
+                    top: -740px;
                     right: -70px;
                     margin-left: 10px;
                     display: flex;
@@ -171,7 +171,7 @@
                     position: relative;
                     right: -47px;
                     top: -700px;
-                    height: 29vh;
+                    min-height: 29vh;
                     width: 60vw;
                     justify-self: center;
                     display: grid;
@@ -367,7 +367,7 @@
                 
                 .secondConcern {
                     background-color: white;
-                    height: 52vh;
+                    min-height: 65vh;
                     width: 58vw;
                     position: relative;
                     right: -55px;
@@ -446,6 +446,7 @@
                 #meanings {
                     margin-top: 18px;
                     margin-left: 15px;
+                    list-style-type: none;
                 }
                 
                 #meaningandusage {
@@ -650,7 +651,13 @@
                     justify-content: space-between;
                     font-family: Georgia, 'Times New Roman', Times, serif;
                     cursor: pointer;
-                    color: dodgerblue;
+                    color: blue;
+                    list-style-type: none;
+                    font-weight: 500;
+                }
+                
+                .synos {
+                    margin-bottom: 19px;
                 }
                 
                 .infs {

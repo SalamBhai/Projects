@@ -45,16 +45,22 @@ console.log(navbar);
 var sidebar = document.getElementById("sidebar");
 var FirstKnownUseContent = document.getElementById("FirstKnownUseContent");
 var EtymologyContent = document.getElementById("EtymologyContent");
+var synonymsContents = document.getElementById("synonymsContents");
+var antonym = document.getElementById("ant");
 var fronttems = document.getElementById("fi");
 var sides = document.getElementById("sides");
 var headofInflection = document.getElementById("headInf");
+var synAndCite = document.getElementById("synAndcite");
 console.log(srcofAudio);
 const responseArray = [];
+
 const arrayofhomsAndOffensiveCheck = [];
 searchbtn.addEventListener('click', function(e) {
+            var CharArrayOfEtymologyContents;
             e.preventDefault();
             var text = searchBox.value;
             console.log(text);
+
             alert(`"Please wait while I search ${text}"`);
             fetch(`https://www.dictionaryapi.com/api/v3/references/collegiate/json/${text}?key=ea90f273-699f-4d3f-9ece-8ae6a91f0eda`)
                 .then(function(searchResult) {
@@ -96,11 +102,17 @@ searchbtn.addEventListener('click', function(e) {
                           }
                           initial.textContent = (finalResult[0].fl[0]).toUpperCase();
                           partofSpeech2.innerHTML = (finalResult[0].fl).toUpperCase();
-                          headofInflection.textContent = ` Change In Form Of ${text}`
+                          headofInflection.innerHTML = ` Change In Form Of ${text} in <i>${(finalResult[0].fl).toUpperCase()}</i>`
                           wordInSecondConcern.textContent = text;
                           FirstKnownUseContent.innerHTML = ` The First Known Use Of ${text} was  <i>${finalResult[0].date}</i> in the above defination `;
                           EtymologyContent.innerHTML =  `<i>${finalResult[0].et[0][1]}:</i>`;
-                         if(finalResult[0].et[0][1] === null )  EtymologyContent.style.visibility=  "hidden";
+                          antonym.innerHTML = ` Please Visit the  <a href="Thesauruspage.html"> Thesaurus page</a> for antonyms of the word ${text}</p>`;
+                          CharArrayOfEtymologyContents = (finalResult[0].et[0][1]).split()
+                          for(let each of CharArrayOfEtymologyContents)
+                          {
+                              console.log(each);
+                          }
+                         if(finalResult[0].et[0][1] === null )  EtymologyContent.style.visibility =  "hidden";
                            
                          for (let i = 0; i < finalResult[0].def[0].sseq.length; i++) 
                          {
@@ -111,7 +123,41 @@ searchbtn.addEventListener('click', function(e) {
                             meaningAndUsage.appendChild(sensualMeaning);
                             
                          }
-                           
+                         for (let i = 0; i < finalResult[0].syns[0].pt.length; i++) 
+                         {
+                            var firstLi = document.createElement('li');
+                            var ulInsynonymsContents = document.createElement('ul');
+                            ulInsynonymsContents.id = "synsAndcites";
+                            var syn = document.createElement('li');
+                            syn.classList.add("synos");
+                            syn.innerHTML = finalResult[0].syns[0].pt[i][1]
+                            ulInsynonymsContents.appendChild(syn);
+                            firstLi.appendChild(ulInsynonymsContents);
+                            synonymsContents.appendChild(firstLi);
+                            i+=1;
+                            if(i===4 && finalResult[0].syns[0].pt.length > 3) break;
+                         }
+                          var ptag = document.createElement('p');
+                          ptag.style.fontStyle= "italic";
+                          ptag.style.color= "dodgerblue";
+                         ptag.innerHTML  = ` Please Visit the  <a href="Thesauruspage.html"> Thesaurus page</a> for more synonyms  of the word ${text}...</p>`;
+                         synonymsContents.appendChild(ptag);
+                           //  for (let i = 1; i < finalResult[0].syns[0].pt.length; i++) 
+                        //  {
+                        //     var cite = document.createElement('cite');
+                        //     cite.classList.add("synos");
+                        //     cite.innerHTML = finalResult[0].syns[0].pt[i][1]
+                        //     synonymsContents.appendChild(cite);
+                        //     i+=1;
+                           //  }
+                            
+                           for (let i = 0; i <finalResult[0].ins.length; i++) {
+                            if((finalResult[0].ins[i]).slice(finalResult[0].ins[i].length-2,finalResult[0].ins[i].length))
+                            {
+                                
+                            }
+                           }
+
                           headpage.removeChild(landingcss);
                           console.log(headpage);
                           setInterval(function()
