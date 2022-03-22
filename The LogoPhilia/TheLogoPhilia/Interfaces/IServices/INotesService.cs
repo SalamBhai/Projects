@@ -11,6 +11,8 @@ namespace TheLogoPhilia.Interfaces.IServices
          Task<BaseResponse<NotesViewModel>> Get(int Id);
          Task<BaseResponse<NotesViewModel>> Update(UpdateNotesRequestModel model, int Id);
          Task<BaseResponse<IEnumerable<NotesViewModel>>> GetNotesByApplicationUser(int UserId);
+         Task<BaseResponse<IEnumerable<NotesViewModel>>> GetNotes();
+         
         
         Task<bool> Delete(int Id);
     }

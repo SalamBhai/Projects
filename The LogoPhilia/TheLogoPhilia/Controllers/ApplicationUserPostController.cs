@@ -51,5 +51,30 @@ namespace TheLogoPhilia.Controllers
            if(!post.Success) return BadRequest();
            return Ok(post);
         }
+        [HttpGet("GetAllPosts")]
+        // [Authorize(Roles = "ApplicationUser")]
+        public async Task<IActionResult> GetAllPosts()
+        {
+           var post = await _applicationUserPostService.Get();
+           if(!post.Success) return BadRequest();
+           return Ok(post);
+        }
+        [HttpPut("UpdatePost/{Id}")]
+        // [Authorize(Roles = "ApplicationUser")]
+        public async Task<IActionResult> UpdatePost(UpdateApplicationUserPostViewModel model, int id)
+        {
+           var post = await _applicationUserPostService.Update(model,id);
+           if(!post.Success) return BadRequest();
+           return Ok(post);
+        }
+        [HttpGet("GetPostOfLoggedInUser")]
+        // [Authorize(Roles = "ApplicationUser")]
+        public async Task<IActionResult> GetPostOfLoggedInUser()
+        {
+            var id = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+           var post = await _applicationUserPostService.GetPostsOfUser(id);
+           if(!post.Success) return BadRequest();
+           return Ok(post);
+        }
     }
 }

@@ -43,14 +43,14 @@ namespace TheLogoPhilia.Controllers
          }
         [HttpGet("GetApplicationUser/{Id}")]
          public async Task<IActionResult> GetApplicationUser([FromRoute]  int Id)
-         {
+           {
                var response = await  _applicationUserService.Get(Id);
               if (!response.Success)
                {
                  return BadRequest(response);
                 }
              return Ok(response);
-         }
+            }
         [HttpGet("GetAllApplicationUsers")]
          public async Task<IActionResult> GetAllApplicationUsers()
          {

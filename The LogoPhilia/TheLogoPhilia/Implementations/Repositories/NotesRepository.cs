@@ -17,7 +17,15 @@ namespace TheLogoPhilia.Implementations.Repositories
 
         public async Task<IEnumerable<Notes>> GetNotesOfUser(int UserId)
         {
-            return await _context.Notes.Include(N=> N.ApplicationUser).Where(N=>N.ApplicationUserId==UserId).ToListAsync();
+            return await _context.Notes.Include(N=> N.ApplicationUser).ThenInclude(L=> L.User).Where(N=>N.ApplicationUserId==UserId && N.IsDeleted== false).ToListAsync();
+        }
+        public async Task<IEnumerable<Notes>> GetNotes()
+        {
+            return await _context.Notes.Include(N=> N.ApplicationUser).ThenInclude(L=> L.User).Where(N=>N.IsDeleted == false).ToListAsync();
+        }
+        public async Task<Notes> GetNote(int Id)
+        {
+            return await _context.Notes.Include(N=> N.ApplicationUser).ThenInclude(L=> L.User).Where(N=>N.Id==Id && N.IsDeleted == false).SingleOrDefaultAsync();
         }
     }
 }

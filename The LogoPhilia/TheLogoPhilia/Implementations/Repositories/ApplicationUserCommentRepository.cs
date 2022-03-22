@@ -17,16 +17,16 @@ namespace TheLogoPhilia.Implementations.Repositories
         }
          public async Task<ApplicationUserComment> GetApplicationUserComment(int id)
         {
-          return await _context.ApplicationUserComments.Include(L=> L.ApplicationUser).Include(L=> L.Post).SingleOrDefaultAsync(L=> L.Id ==id);
+          return await _context.ApplicationUserComments.Include(L=> L.ApplicationUser).ThenInclude(L=> L.User).Include(L=> L.Post).SingleOrDefaultAsync(L=> L.Id ==id);
         }
 
         public async Task<IEnumerable<ApplicationUserComment>> GetApplicationUserComments()
         {
-            return await _context.ApplicationUserComments.Include(L=> L.ApplicationUser).Include(L=> L.Post).ToListAsync();
+            return await _context.ApplicationUserComments.Include(L=> L.ApplicationUser).ThenInclude(L=> L.User).Include(L=> L.Post).ToListAsync();
         }
         public async Task<IEnumerable<ApplicationUserComment>> GetCommentsOfAPost(int PostId)
         {
-            return await _context.ApplicationUserComments.Include(L=> L.ApplicationUser).Include(L=> L.Post).Where(L=> L.PostId == PostId && L.IsDeleted == false).ToListAsync();
+            return await _context.ApplicationUserComments.Include(L=> L.ApplicationUser).ThenInclude(L=> L.User).Include(L=> L.Post).Where(L=> L.PostId == PostId && L.IsDeleted == false).ToListAsync();
         }
     }
 }

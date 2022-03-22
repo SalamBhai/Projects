@@ -35,7 +35,7 @@ namespace TheLogoPhilia.Implementations.Services
            await _notesRepository.Create(note);
             return new BaseResponse<NotesViewModel>
             {
-                Message= "Registration Notes Success",
+                Message= "Registration Of Notes Successful",
                 Success = true,
                 Data = new NotesViewModel
                 {
@@ -93,30 +93,33 @@ namespace TheLogoPhilia.Implementations.Services
         }
           public async Task<BaseResponse<IEnumerable<NotesViewModel>>> GetNotesByApplicationUser( int UserId)
           {
-              var userNotes = await _notesRepository.GetAll(L=> L.ApplicationUserId == UserId);
+               var userInPost = await _userRepository.GetUser(UserId);
+                var appUserId= userInPost.ApplicationUser.Id;
+              var userNotes = await _notesRepository.GetNotesOfUser(appUserId);
+             
               if(userNotes == null) return new BaseResponse<IEnumerable<NotesViewModel>>{
                   Message = "Retrieval Failed",
                   Success = false,              
                 };
-                var userNotesReturned = userNotes.Select(L=> new NotesViewModel
-                {
-                   ApplicationUserId = L.Id,
-                    Content = L.Content,
-                     NoteId = L.Id,
-                     DateAdded = L.DateAdded,
-                     ApplicationUserUserName = L.ApplicationUser.User.UserName,
-                }).ToList();
+               
                 return new BaseResponse<IEnumerable<NotesViewModel>>
                 {
                   Message = "Retrieval Successful",
                   Success = true,
-                   Data= userNotesReturned
+                   Data= userNotes.Select(L=> new NotesViewModel
+                   {
+                     ApplicationUserId = L.ApplicationUserId,
+                      Content = L.Content,
+                     NoteId = L.Id,
+                     DateAdded = L.DateAdded,
+                     ApplicationUserUserName = L.ApplicationUser.User.UserName,
+                   }).ToList()
                 };
           }
          
          public async Task<BaseResponse<IEnumerable<NotesViewModel>>> GetNotes()
          {
-             var notes = await _notesRepository.Get();
+             var notes = await _notesRepository.GetNotes();
              if(notes == null) return new BaseResponse<IEnumerable<NotesViewModel>>
              {
                  Message= "Failure To Get All",

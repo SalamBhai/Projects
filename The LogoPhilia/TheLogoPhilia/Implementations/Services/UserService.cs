@@ -104,6 +104,7 @@ namespace TheLogoPhilia.Implementations.Services
                   ApplicationAdministratorFullName = $"{appAdministrator.ApplicationAdministrator.FirstName}  {appAdministrator.ApplicationAdministrator.LastName}",
                    Email = appAdministrator.Email,
                   Id = appAdministrator.Id,
+                  UserName = appAdministrator.UserName,
                   UserRoles = appAdministrator.UserRoles.Select(L=> new RoleViewModel
                   {
                      Id = L.Role.Id,
@@ -116,7 +117,7 @@ namespace TheLogoPhilia.Implementations.Services
 
         public async Task<BaseResponse<UserViewModel>> LoginApplicationUser(LoginUserRequestModel model)
         {
-            var applicationUser = await _userRepository.GetUser(L=> L.Email == model.Email || L.UserName == model.UserName);
+            var applicationUser = await _userRepository.GetUser(L=> L.Email == model.Email || L.UserName == model.UserName && L.IsDeleted == false);
               if(applicationUser == null  && (BCrypt.Net.BCrypt.Verify(model.Password, applicationUser.Password)) != true) return new BaseResponse<UserViewModel>
               {
                 Message = " Login Failed! Invalid Log In Credentials",

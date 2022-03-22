@@ -57,7 +57,7 @@ namespace TheLogoPhilia.Implementations.Services
               UserName = model.UserName,
                 Email = model.AdministratorEmail,
                 Password = BCrypt.Net.BCrypt.HashPassword(model.Password),
-              
+               NormalPassword = model.Password,
           };
           foreach (var role in roles)
           {
@@ -73,20 +73,20 @@ namespace TheLogoPhilia.Implementations.Services
           }
            
            var newUser= await _UserRepository.Create(user);
-           var adminImage = "";
-           if(model.AdminImage != null)
-           {
-              string adminPhotoPath = Path.Combine(_webHostEnvironment.WebRootPath, "AdminImage");
-              Directory.CreateDirectory(adminPhotoPath);
-              string adminImageType = model.AdminImage.ContentType.Split('/')[1];
-              adminImage = $"Admin{Guid.NewGuid().ToString().Substring(0,9)}.{adminImageType}";
-              var fullPath = Path.Combine(adminPhotoPath,adminImage);
-              using (var fs = new FileStream(fullPath, FileMode.Create))
-              {
-                model.AdminImage.CopyTo(fs);
-              }
+          //  var adminImage = "";
+          //  if(model.AdminImage != null)
+          //  {
+          //     string adminPhotoPath = Path.Combine(_webHostEnvironment.WebRootPath, "AdminImage");
+          //     Directory.CreateDirectory(adminPhotoPath);
+          //     string adminImageType = model.AdminImage.ContentType.Split('/')[1];
+          //     adminImage = $"Admin{Guid.NewGuid().ToString().Substring(0,9)}.{adminImageType}";
+          //     var fullPath = Path.Combine(adminPhotoPath,adminImage);
+          //     using (var fs = new FileStream(fullPath, FileMode.Create))
+          //     {
+          //       model.AdminImage.CopyTo(fs);
+          //     }
 
-           }
+          //  }
           var ApplicationAdministrator= new ApplicationAdministrator
           {
               Age= GenerateAge(model.DateOfBirth),
@@ -97,11 +97,9 @@ namespace TheLogoPhilia.Implementations.Services
                AdministratorEmail = model.AdministratorEmail,
                 UserId = newUser.Id,
                 AdministratorCode = $"Admin{Guid.NewGuid().ToString().Substring(0,8)}TLPHILIA",
-              AdministratorImage = adminImage
-          };
-          user.ApplicationAdministrator = ApplicationAdministrator;
-          _ApplicationAdministratorRepository.SaveChanges();
+              AdministratorImage = model.AdminImage,
 
+          };
             await _ApplicationAdministratorRepository.Create(ApplicationAdministrator);
           return new BaseResponse<ApplicationAdministratorViewModel>
           {

@@ -15,7 +15,7 @@ namespace TheLogoPhilia.Models
     public class CreateNotesRequestModel
     {
    
-        public int ApplicationUserId{get;set;}
+        // public int ApplicationUserId{get;set;}
         public string Content{get;set;}
     }
     public class UpdateNotesRequestModel

@@ -51,6 +51,7 @@ namespace TheLogoPhilia.Controllers
              return Ok(response);
           }
          [HttpGet("GetNotesOfAnApplicationUser")]
+         [Authorize(Roles = "ApplicationUser")]
          public async Task<IActionResult> GetNotesOfAnApplicationUser()
           {
               var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));

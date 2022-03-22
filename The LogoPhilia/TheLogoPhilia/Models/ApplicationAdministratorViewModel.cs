@@ -20,7 +20,7 @@ namespace TheLogoPhilia.Models
     }
     public class CreateApplicationAdministratorRequestModel
     {
-        public IFormFile AdminImage {get;set;}
+        public string AdminImage {get;set;}
         public string FirstName {get;set;}
         public string LastName{get;set;}
         public string UserName{get;set;}

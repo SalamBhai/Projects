@@ -22,6 +22,8 @@ namespace TheLogoPhilia.Controllers
         }
        
         [HttpPost("CreateAdministratorMailToManyUsersOnDiscussion")]
+         [Authorize(Roles="ApplicationAdministrator")]
+         [Authorize(Roles="ApplicationSubAdministrator")]
         public async Task<IActionResult> CreateAdministratorMailForDiscussionToManyUsers([FromBody] CreateAdministratorMessageRequestModel model)
         {
             var mailsToUser = await _administratorMessageService.CreateAdministratorMessageForDiscussionToMany(model);

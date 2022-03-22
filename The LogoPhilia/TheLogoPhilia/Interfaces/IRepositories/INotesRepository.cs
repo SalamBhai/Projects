@@ -8,5 +8,7 @@ namespace TheLogoPhilia.Interfaces.IRepositories
     public interface INotesRepository : IRepository<Notes>
     {
          Task<IEnumerable<Notes>> GetNotesOfUser(int UserId);
+        Task<IEnumerable<Notes>> GetNotes();
+        Task<Notes> GetNote(int Id);
     }
 }

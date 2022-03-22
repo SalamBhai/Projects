@@ -110,7 +110,7 @@ namespace TheLogoPhilia.Implementations.Services
             };
             return new BaseResponse<ApplicationUserPostViewModel>
            {
-                Message = "User Retrieval Successful",
+                Message = "Post Retrieval Successful",
                 Success = true,
                 Data= appUserPostReturned,
            };
@@ -197,6 +197,46 @@ namespace TheLogoPhilia.Implementations.Services
            post.IsDeleted = true;
            _appUserPostRepository.SaveChanges();
            return true;
+        }
+
+        public async Task<BaseResponse<IEnumerable<ApplicationUserPostViewModel>>> GetPostsOfUser(int UserId)
+        {
+            var postsOfUser = await _appUserPostRepository.GetAllPosts(L=> L.ApplicationUserId == UserId);
+             if(postsOfUser == null) return new BaseResponse<IEnumerable<ApplicationUserPostViewModel>>
+          {
+           Message = "Post Not Found",
+           Success = false,
+          };
+        
+          
+           return new  BaseResponse<IEnumerable<ApplicationUserPostViewModel>>
+           {
+               Message = "Update Successful",
+               Success =true,
+               Data =  postsOfUser.Select(postOfUser=> new ApplicationUserPostViewModel
+               {
+                   ApplicationUserId = postOfUser.ApplicationUserId,
+                    PostId = postOfUser.Id,
+                    ApplicationUserName = postOfUser.ApplicationUser.User.UserName,
+                    ApplicationUserEmail = postOfUser.ApplicationUser.UserEmail,
+                   PostContent = postOfUser.PostContent,
+                   VideoFile = postOfUser.VideoFile,
+                    DatePosted = postOfUser.DatePosted,
+                
+                  ApplicationUserComments = postOfUser.ApplicationUserComments.Select( L=> new ApplicationUserCommentViewModel
+                 {
+                   ApplicationUserId = L.ApplicationUserId,
+                   ApplicationUserName = L.ApplicationUser.User.UserName,
+                   CommentContent = L.CommentContent,
+                   PostId = L.PostId,
+                   CommentDate = L.CommentDate,
+                   PostCreator = L.Post.ApplicationUser.User.UserName,
+                   PostDate =L.Post.DateCreated,
+                   Id = L.Id,
+                  }
+                ).ToList(),   
+               }).ToList()
+           };
         }
     }
 }

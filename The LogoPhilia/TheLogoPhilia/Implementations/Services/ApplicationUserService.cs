@@ -75,7 +75,7 @@ namespace TheLogoPhilia.Implementations.Services
                  
             };
             user.UserRoles.Add(userRole);
-           var newUser= await _UserRepository.Create(user);
+            await _UserRepository.Create(user);
           var applicationUser= new ApplicationUser
           {
               Age= GenerateAge(model.DateOfBirth),
@@ -85,9 +85,9 @@ namespace TheLogoPhilia.Implementations.Services
               
               FirstName = model.FirstName,
               LastName =  model.LastName,
-                User = newUser,
+                User = user,
                 UserEmail = model.UserEmail,
-                UserId = newUser.Id,
+                UserId = user.Id,
                 ApplicationUserImage = model.UserImage,
           };
            user.ApplicationUser = applicationUser;
@@ -117,6 +117,7 @@ namespace TheLogoPhilia.Implementations.Services
         public async Task<BaseResponse<ApplicationUserViewRequestModel>> Get(int Id)
         {
            var applicationUser= await _applicationUserRepository.GetUser(Id);
+           var user = await _UserRepository.GetUser(applicationUser.UserId);
            
            if(applicationUser == null) return new BaseResponse<ApplicationUserViewRequestModel>
            {
@@ -136,9 +137,9 @@ namespace TheLogoPhilia.Implementations.Services
                   DateOfBirth = applicationUser.DateOfBirth,
                      
                      Gender = applicationUser.Gender,
-                     UserEmail= applicationUser.UserEmail,
+                     UserEmail= user.Email,
                      ApplicationUserImage = applicationUser.ApplicationUserImage,
-                     UserName= applicationUser.User.UserName,
+                     UserName= user.UserName,
                       UserId = applicationUser.UserId,
                       ApplicationUserAdminMessages = applicationUser.ApplicationUserAdminMessages.Select(L => new ApplicationUserAdminMessageViewModel
                       {
@@ -182,20 +183,25 @@ namespace TheLogoPhilia.Implementations.Services
         public async Task<BaseResponse<IEnumerable<ApplicationUserViewRequestModel>>> Get()
         {
            var applicationUsers = await _applicationUserRepository.GetAllUsers();
-           var applicationUsersReturned= applicationUsers.Select( L=> new ApplicationUserViewRequestModel
-           {
-             ApplicationUserId =L.Id,
-             UserName = L.User.UserName,
-             UserEmail = L.UserEmail,
-             Gender = L.Gender,
-             Age = L.Age,
-             Country = L.Country,
-             UserId = L.UserId,
-             FullName = $"{L.FirstName} {L.LastName}",
-           }).ToList();
+           if(applicationUsers == null)  return new BaseResponse<IEnumerable<ApplicationUserViewRequestModel>>
+            {
+               Message =$"Application Users Not Found",
+               Success = false
+            };
+          
            return new BaseResponse<IEnumerable<ApplicationUserViewRequestModel>>
            {
-               Data = applicationUsersReturned,
+               Data = applicationUsers.Select( L=> new ApplicationUserViewRequestModel
+              {
+               ApplicationUserId =L.Id,
+                UserName = L.User.UserName,
+               UserEmail = L.UserEmail,
+               Gender = L.Gender,
+               Age = L.Age,
+               Country = L.Country,
+               UserId = L.UserId,
+               FullName = $"{L.FirstName} {L.LastName}",
+               }).ToList(),
                  Message="Retrieval Successful",
                  Success = true,
            };

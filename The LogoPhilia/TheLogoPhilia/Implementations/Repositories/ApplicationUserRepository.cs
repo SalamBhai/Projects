@@ -17,17 +17,24 @@ namespace TheLogoPhilia.Implementations.Repositories
 
         public async Task<IEnumerable<ApplicationUser>> GetAllUsers()
         {
-           return await _context.ApplicationUsers.Include(L=> L.ApplicationUserAdminMessages).ThenInclude(L=> L.AdministratorMessage).ThenInclude(L=>L.ApplicationUserAdminMessages).ThenInclude(L=>L.ApplicationUser).Include(L=> L.ApplicationUserComments).Include(L=>  L.ApplicationUserNotes).Include(L=> L.ApplicationUserPosts).ToListAsync();
+           return await _context.ApplicationUsers.Include(L=> L.User).Include(L=> L.ApplicationUserAdminMessages).ThenInclude(L=> L.AdministratorMessage)
+           .ThenInclude(L=>L.ApplicationUserAdminMessages).ThenInclude(L=>L.ApplicationUser).Include(L=> L.ApplicationUserComments)
+           .Include(L=>  L.ApplicationUserNotes).Include(L=> L.ApplicationUserPosts).Where(L=> L.IsDeleted == false).ToListAsync();
         }
 
         public async Task<ApplicationUser> GetUser(int id)
         {
-            return await _context.ApplicationUsers.Include(L=> L.ApplicationUserAdminMessages).ThenInclude(L=> L.AdministratorMessage).ThenInclude(L=>L.ApplicationUserAdminMessages).ThenInclude(L=>L.ApplicationUser).Include(L=> L.ApplicationUserComments).Include(L=>  L.ApplicationUserNotes).Include(L=> L.ApplicationUserPosts).SingleOrDefaultAsync(L=> L.Id == id);
+            return await _context.ApplicationUsers.Include(L=> L.User).Include(L=> L.ApplicationUserAdminMessages)
+            .ThenInclude(L=> L.AdministratorMessage).ThenInclude(L=>L.ApplicationUserAdminMessages).ThenInclude(L=>L.ApplicationUser)
+            .Include(L=> L.ApplicationUserComments).Include(L=>  L.ApplicationUserNotes)
+            .Include(L=> L.ApplicationUserPosts).Where(L=> L.IsDeleted == false).SingleOrDefaultAsync(L=> L.Id == id);
    
         }
          public async Task<IEnumerable<ApplicationUser>> GetSelectedApplicationUsers(List<int> UserIds)
          {
-             return await _context.ApplicationUsers.Include(L=> L.ApplicationUserAdminMessages).ThenInclude(L=> L.AdministratorMessage).ThenInclude(L=>L.ApplicationUserAdminMessages).ThenInclude(L=>L.ApplicationUser).Include(L=> L.ApplicationUserComments).Include(L=>  L.ApplicationUserNotes).Include(L=> L.ApplicationUserPosts).Where(L=> UserIds.Contains(L.Id)).ToListAsync();
+             return await _context.ApplicationUsers.Include(L=> L.User).Include(L=> L.ApplicationUserAdminMessages).ThenInclude(L=> L.AdministratorMessage).ThenInclude(L=>L.ApplicationUserAdminMessages).ThenInclude(L=>L.ApplicationUser).Include(L=> L.ApplicationUserComments)
+             .Include(L=>  L.ApplicationUserNotes).Include(L=> L.ApplicationUserPosts)
+             .Where(L=> UserIds.Contains(L.Id) && L.IsDeleted == false).ToListAsync();
          }
 
         public async Task<IEnumerable<string>> GetUserEmails()

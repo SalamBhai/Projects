@@ -45,7 +45,7 @@ namespace TheLogoPhilia.Implementations.Services
               Success = true,
               Data = new ApplicationUserCommentViewModel
               {  
-                  PostId = comment.PostId,
+                  PostId = comment.Post.Id,
                   ApplicationUserId = comment.ApplicationUserId,
                   ApplicationUserName = comment.ApplicationUser.User.UserName,
                   CommentContent = comment.CommentContent,
@@ -118,11 +118,13 @@ namespace TheLogoPhilia.Implementations.Services
         public async  Task<BaseResponse<IEnumerable<ApplicationUserCommentViewModel>>> GetCommentsOfAPost(int PostId)
         {
            var postComments = await _applicationUserCommentRepository.GetCommentsOfAPost(PostId);
-           if(postComments == null) return new BaseResponse<IEnumerable<ApplicationUserCommentViewModel>>
-           {
-               Message = "Post Has No Comments yet",
-               Success = false,
-           };
+           if(postComments == null)
+           {    return new BaseResponse<IEnumerable<ApplicationUserCommentViewModel>>
+               {
+                     Message = "Post Has No Comments yet",
+                     Success = false,
+               };
+           }
            
            return new BaseResponse<IEnumerable<ApplicationUserCommentViewModel>>
            { 
