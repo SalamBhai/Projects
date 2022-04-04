@@ -44,7 +44,9 @@ namespace TheLogoPhilia
                builder.AllowAnyMethod();
                builder.AllowAnyOrigin();
             }));
+            services.AddHttpContextAccessor();
                 services.AddScoped<IRoleService, RoleService>();
+                services.AddScoped<IOxfordService, OxfordService>();
                 services.AddScoped<IRoleRepository, RoleRepository>();
                 services.AddScoped<IUserRoleRepository, UserRoleRepository>();
                 services.AddScoped<IApplicationUserService, ApplicationUserService>();

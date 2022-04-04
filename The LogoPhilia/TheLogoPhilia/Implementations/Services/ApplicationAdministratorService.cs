@@ -73,20 +73,7 @@ namespace TheLogoPhilia.Implementations.Services
           }
            
            var newUser= await _UserRepository.Create(user);
-          //  var adminImage = "";
-          //  if(model.AdminImage != null)
-          //  {
-          //     string adminPhotoPath = Path.Combine(_webHostEnvironment.WebRootPath, "AdminImage");
-          //     Directory.CreateDirectory(adminPhotoPath);
-          //     string adminImageType = model.AdminImage.ContentType.Split('/')[1];
-          //     adminImage = $"Admin{Guid.NewGuid().ToString().Substring(0,9)}.{adminImageType}";
-          //     var fullPath = Path.Combine(adminPhotoPath,adminImage);
-          //     using (var fs = new FileStream(fullPath, FileMode.Create))
-          //     {
-          //       model.AdminImage.CopyTo(fs);
-          //     }
-
-          //  }
+       
           var ApplicationAdministrator= new ApplicationAdministrator
           {
               Age= GenerateAge(model.DateOfBirth),
@@ -98,6 +85,7 @@ namespace TheLogoPhilia.Implementations.Services
                 UserId = newUser.Id,
                 AdministratorCode = $"Admin{Guid.NewGuid().ToString().Substring(0,8)}TLPHILIA",
               AdministratorImage = model.AdminImage,
+              AdministratorType = ApplicationEnums.AdminType.Administrator
 
           };
             await _ApplicationAdministratorRepository.Create(ApplicationAdministrator);
@@ -112,6 +100,9 @@ namespace TheLogoPhilia.Implementations.Services
                   AdministratorEmail = ApplicationAdministrator.AdministratorEmail,
                   Id = ApplicationAdministrator.Id,
                   UserId= ApplicationAdministrator.User.Id,
+                  AdministratorType =  ApplicationEnums.AdminType.Administrator,
+                  AdministratorCode = ApplicationAdministrator.AdministratorCode,
+                  AdminImage = ApplicationAdministrator.AdministratorImage,
               }
 
           };
@@ -145,6 +136,9 @@ namespace TheLogoPhilia.Implementations.Services
                      AdministratorEmail= ApplicationAdministrator.AdministratorEmail,
                      UserName= ApplicationAdministrator.User.UserName,
                       UserId = ApplicationAdministrator.UserId,
+                       AdministratorType =  ApplicationEnums.AdminType.Administrator,
+                       AdminImage = ApplicationAdministrator.AdministratorImage,
+                       AdministratorCode = ApplicationAdministrator.AdministratorCode,
                }
            };
 
@@ -161,6 +155,8 @@ namespace TheLogoPhilia.Implementations.Services
              Age = L.Age,
              UserId = L.UserId,
              FullName = $"{L.FirstName} {L.LastName}",
+              AdministratorType =  ApplicationEnums.AdminType.Administrator,
+              AdminImage = L.AdministratorImage,
            }).ToList();
            return new BaseResponse<IEnumerable<ApplicationAdministratorViewModel>>
            {
@@ -271,7 +267,8 @@ namespace TheLogoPhilia.Implementations.Services
                LastName = model.LastName,
                User = user,
                UserId = user.Id,
-               
+              AdministratorType = ApplicationEnums.AdminType.Administrator,
+              AdministratorImage = model.AdminImage 
             };
            await _ApplicationAdministratorRepository.Create(subAdministrator);
            user.ApplicationAdministrator = subAdministrator;
@@ -287,6 +284,8 @@ namespace TheLogoPhilia.Implementations.Services
                   UserName = subAdministrator.User.UserName,
                   AdministratorCode = subAdministrator.AdministratorCode,
                   AdministratorEmail = subAdministrator.AdministratorEmail,
+                  AdministratorType = ApplicationEnums.AdminType.SubAdministrator,
+                  AdminImage = subAdministrator.AdministratorImage,
                }
            };
         }

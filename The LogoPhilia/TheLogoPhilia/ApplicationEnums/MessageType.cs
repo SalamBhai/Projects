@@ -6,6 +6,7 @@ namespace TheLogoPhilia.ApplicationEnums
         BirthdayGreetings,
         GameCreationUpdate,
         PostEngagementUpdate,
-        Warning
+        Warning,
+        RegistrationMail,
     }
 }

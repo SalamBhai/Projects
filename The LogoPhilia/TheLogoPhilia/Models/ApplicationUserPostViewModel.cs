@@ -22,7 +22,7 @@ namespace TheLogoPhilia.Models
     {
         
         public string PostContent{get;set;}
-        public string VideoFile {get;set;}
+        public IFormFile VideoFile {get;set;}
     }
 
     public class UpdateApplicationUserPostViewModel

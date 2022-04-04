@@ -18,7 +18,7 @@ namespace TheLogoPhilia.Implementations.Repositories
 
         public async Task<IEnumerable<User>> GetAllUsers()
         {
-           return await _context.Users.Include(L=> L.ApplicationAdministrator).Include(L=> L.ApplicationUser).Include(L=> L.UserRoles).ThenInclude(L=> L.Role).Where(L=> L.IsDeleted == false).ToListAsync();
+           return await _context.Users.Include(L=> L.ApplicationAdministrator).Include(L=> L.ApplicationUser).ThenInclude(L=> L.User).ThenInclude(L=> L.UserRoles).ThenInclude(L=> L.Role).Where(L=> L.IsDeleted == false).ToListAsync();
         }
 
         public async Task<User> GetUser(int Id)

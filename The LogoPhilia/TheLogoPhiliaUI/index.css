@@ -30,6 +30,8 @@
         font-size: 60px;
         padding-left: 391px;
         left: -120px;
+        animation-name: changeColor;
+        animation-duration: 3s;
     }
     
     #app {
@@ -45,7 +47,15 @@
         animation-name: movetext;
         animation-duration: 3s;
     }
-    
+    @keyframes changeColor {
+        from {
+            left: -0px;
+        }
+        To {
+            color: blue;
+            font-weight: bolder;
+        }
+    }
     @keyframes movetext {
         from {
             left: -400px;

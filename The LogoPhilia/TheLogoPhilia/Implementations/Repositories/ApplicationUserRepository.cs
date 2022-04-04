@@ -17,14 +17,14 @@ namespace TheLogoPhilia.Implementations.Repositories
 
         public async Task<IEnumerable<ApplicationUser>> GetAllUsers()
         {
-           return await _context.ApplicationUsers.Include(L=> L.User).Include(L=> L.ApplicationUserAdminMessages).ThenInclude(L=> L.AdministratorMessage)
+           return await _context.ApplicationUsers.Include(L=> L.User).ThenInclude(L=> L.UserRoles).Include(L=> L.ApplicationUserAdminMessages).ThenInclude(L=> L.AdministratorMessage)
            .ThenInclude(L=>L.ApplicationUserAdminMessages).ThenInclude(L=>L.ApplicationUser).Include(L=> L.ApplicationUserComments)
            .Include(L=>  L.ApplicationUserNotes).Include(L=> L.ApplicationUserPosts).Where(L=> L.IsDeleted == false).ToListAsync();
         }
 
         public async Task<ApplicationUser> GetUser(int id)
         {
-            return await _context.ApplicationUsers.Include(L=> L.User).Include(L=> L.ApplicationUserAdminMessages)
+            return await _context.ApplicationUsers.Include(L=> L.User).ThenInclude(L=> L.UserRoles).Include(L=> L.ApplicationUserAdminMessages)
             .ThenInclude(L=> L.AdministratorMessage).ThenInclude(L=>L.ApplicationUserAdminMessages).ThenInclude(L=>L.ApplicationUser)
             .Include(L=> L.ApplicationUserComments).Include(L=>  L.ApplicationUserNotes)
             .Include(L=> L.ApplicationUserPosts).Where(L=> L.IsDeleted == false).SingleOrDefaultAsync(L=> L.Id == id);
@@ -32,7 +32,7 @@ namespace TheLogoPhilia.Implementations.Repositories
         }
          public async Task<IEnumerable<ApplicationUser>> GetSelectedApplicationUsers(List<int> UserIds)
          {
-             return await _context.ApplicationUsers.Include(L=> L.User).Include(L=> L.ApplicationUserAdminMessages).ThenInclude(L=> L.AdministratorMessage).ThenInclude(L=>L.ApplicationUserAdminMessages).ThenInclude(L=>L.ApplicationUser).Include(L=> L.ApplicationUserComments)
+             return await _context.ApplicationUsers.Include(L=> L.User).ThenInclude(L=> L.UserRoles).Include(L=> L.ApplicationUserAdminMessages).ThenInclude(L=> L.AdministratorMessage).ThenInclude(L=>L.ApplicationUserAdminMessages).ThenInclude(L=>L.ApplicationUser).Include(L=> L.ApplicationUserComments)
              .Include(L=>  L.ApplicationUserNotes).Include(L=> L.ApplicationUserPosts)
              .Where(L=> UserIds.Contains(L.Id) && L.IsDeleted == false).ToListAsync();
          }
@@ -45,7 +45,8 @@ namespace TheLogoPhilia.Implementations.Repositories
 
         public async Task<IEnumerable<ApplicationUser>> GetBirthDayUsers()
         {
-            var users = await _context.ApplicationUsers.Where(L=> L.DateOfBirth.ToShortDateString()== DateTime.UtcNow.ToShortDateString()).ToListAsync();
+            var users = await _context.ApplicationUsers.Include(L=> L.User).ThenInclude(L=> L.UserRoles).Include(L=> L.ApplicationUserAdminMessages).ThenInclude(L=> L.AdministratorMessage).ThenInclude(L=>L.ApplicationUserAdminMessages).ThenInclude(L=>L.ApplicationUser).Include(L=> L.ApplicationUserComments)
+             .Include(L=>  L.ApplicationUserNotes).Include(L=> L.ApplicationUserPosts).Where(L=> L.DateOfBirth.ToShortDateString()== DateTime.UtcNow.ToShortDateString()).ToListAsync();
             return users;
         }
     }

@@ -9,6 +9,7 @@ var headpage = document.getElementById("asd");
 
 var definationsContainer = document.getElementById("DefinationsContainer");
 var searchBox = document.getElementById("searchBox");
+
 var containerinf = document.getElementById("containerinf");
 var searchbtn = document.getElementById("searchbtn");
 var landingcss = document.getElementById("dland");
@@ -56,16 +57,16 @@ var inflections = document.getElementById("inflections");
 var inflectionsAndFirstKnownUse = document.getElementById("inflectionsAndFirstKnownUse");
 var synAndCite = document.getElementById("synAndcite");
 var secondConcerns = document.getElementsByClassName('secondConcern');
-
+var CharArrayOfEtymologyContents;
 console.log(srcofAudio);
 const responseArray = [];
 
 searchbtn.addEventListener('click', function(e) {
-            var CharArrayOfEtymologyContents;
+            
             e.preventDefault();
             var text = searchBox.value;
             console.log(text);
-
+   
             alert(`"Please wait while I search ${text}"`);
             fetch(`https://www.dictionaryapi.com/api/v3/references/collegiate/json/${text}?key=ea90f273-699f-4d3f-9ece-8ae6a91f0eda`)
                 .then(function(searchResult) {
@@ -161,14 +162,12 @@ searchbtn.addEventListener('click', function(e) {
                             }
                             if(responseArray.length>1)
                             {
-                              
                               definationsContainerForEachPartOfSpeech(text);
-                              
                             }
-                            // else
-                            // {
-                            //   openPage();
-                            // }
+                            else
+                            {
+                              openPage();
+                            }
                             
                             
                 }) 
@@ -195,6 +194,7 @@ var setItemsToSecondConcern = function(finalResult,text)
 
 var definationsContainerForEachPartOfSpeech =  function(text)
 {
+  
   
     for (let i = 1; i < responseArray.length; i++) 
     {
@@ -270,13 +270,13 @@ var iteratorOfResponseForMeaningForEachDiv =  function(responseArray, index)
     meaningAndUsageUl.appendChild(liOfMeaning);
     // console.log("test",meaningAndUsageUl);
   }
-  // for (let secondConcern of secondConcerns) {
-  //  if( responseArray[index].def[0].sseq.length < 4 && responseArray[index].syns === undefined)
-  //  {
-  //    secondConcern.style.height = "62vh";
-  //  }
+  for (let secondConcern of secondConcerns) {
+   if( responseArray[index].def[0].sseq.length < 4 && responseArray[index].syns === undefined)
+   {
+     secondConcern.style.height = "62vh";
+   }
     
-  // }
+  }
   return meaningAndUsageUl;
   
 }

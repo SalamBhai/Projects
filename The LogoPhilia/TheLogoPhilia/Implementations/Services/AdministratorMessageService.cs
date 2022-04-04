@@ -48,13 +48,16 @@ namespace TheLogoPhilia.Implementations.Services
                Success = false,
             };
             
-                   var adminMessage = new AdministratorMessage
-                   {
-                      DateSent = DateTime.UtcNow,
-                      MessageContent = messageReturned,
-                      MessageSubject = model.MessageSubject,
-                      MessageType = model.MessageType, 
-                   };
+             var adminMessage = new AdministratorMessage
+            {
+              DateSent = DateTime.UtcNow,
+              MessageContent = messageReturned,
+             MessageSubject = model.MessageSubject,
+              MessageType = model.MessageType, 
+            };
+             var sentStatus = await _messageSender.SendMailToMultipleUserAboutDiscussion(model.MessageSubject, usersEmails,messageReturned,postUrls);
+            
+               var message=  await _administratorMessageRepository.Create(adminMessage);
             
             foreach(var user in selectedUsers)
             {
@@ -62,13 +65,13 @@ namespace TheLogoPhilia.Implementations.Services
                {
                   ApplicationUserId = user.Id,
                   ApplicationUser = user,
-                  AdministratorMessage = adminMessage,
-                  AdministratorMessageId = adminMessage.Id,
+                  AdministratorMessage = message,
+                  AdministratorMessageId = message.Id,
                };
                adminMessage.ApplicationUserAdminMessages.Add(appAdminMessage);
             }
-            var sentStatus = await _messageSender.SendMailToMultipleUserAboutDiscussion(model.MessageSubject, usersEmails,messageReturned,postUrls);
-            await _administratorMessageRepository.Create(adminMessage);
+           
+           
             return new BaseResponse<AdministratorMessageViewModel>
             {
                      Message =sentStatus,
@@ -76,10 +79,10 @@ namespace TheLogoPhilia.Implementations.Services
                      Data = new AdministratorMessageViewModel
                      {
                          Id = adminMessage.Id,
-                         DateSent = adminMessage.DateSent,
-                         MessageContent = adminMessage.MessageContent,
-                         MessageSubject = adminMessage.MessageSubject,
-                         MessageType = adminMessage.MessageType,
+                         DateSent = message.DateSent,
+                         MessageContent = message.MessageContent,
+                         MessageSubject = message.MessageSubject,
+                         MessageType = message.MessageType,
                      }
             };
         }

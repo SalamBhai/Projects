@@ -30,28 +30,10 @@ namespace TheLogoPhilia.Implementations.Services
 
         public async Task<BaseResponse<ApplicationUserViewRequestModel>> CreateApplicationUser(ApplicationUserCreateRequestModel model)
         {
-          //     var userImage = "";
-          //      if(model.UserImage != null)
-          //      {
-          //        string userPhotoPath = Path.Combine(_webHostEnvironment.WebRootPath, "AdminImage");
-          //        Directory.CreateDirectory(userPhotoPath);
-          //         string userImageType = model.UserImage.ContentType.Split('/')[1];
-          //       userImage = $"Admin{Guid.NewGuid().ToString().Substring(0,9)}.{userImageType}";
-          //        var fullPath = Path.Combine(userPhotoPath,userImage);
-          //       if(userImageType.ToLower() != "jpg" || userImageType.ToLower() != "jpeg" || userImageType.ToLower() != "png")
-          //          {
-          //          throw new Exception("File Type Not Supported");
-          //        }
-          //       else
-          //       {
-          //           using (var fs = new FileStream(fullPath, FileMode.Create))
-          //            {
-          //            model.UserImage.CopyTo(fs);
-          //          }
-          //        }
+              
              
 
-          //  }
+           
             var role = await _roleRepository.GetRoleByName("ApplicationUser");
           var existingUser = _UserRepository.AlreadyExists(L => L.UserName == model.UserName);  
           if(existingUser)  return new BaseResponse<ApplicationUserViewRequestModel>
@@ -91,8 +73,7 @@ namespace TheLogoPhilia.Implementations.Services
                 ApplicationUserImage = model.UserImage,
           };
            user.ApplicationUser = applicationUser;
-
-            await _applicationUserRepository.Create(applicationUser);
+          await _applicationUserRepository.Create(applicationUser);
           return new BaseResponse<ApplicationUserViewRequestModel>
           {
               Message = "Registration Successful",
@@ -216,36 +197,13 @@ namespace TheLogoPhilia.Implementations.Services
                Message =$"Application User With Id  {Id} Not Found",
                Success = false
             };
-              var userImage = "";
-               if(model.UserImage != null)
-               {
-                 string userPhotoPath = Path.Combine(_webHostEnvironment.WebRootPath, "AdminImage");
-                 Directory.CreateDirectory(userPhotoPath);
-                  string userImageType = model.UserImage.ContentType.Split('/')[1];
-                  userImage = $"Admin{Guid.NewGuid().ToString().Substring(0,9)}.{userImageType}";
-                 var fullPath = Path.Combine(userPhotoPath,userImage);
-                  
-                  if(userImageType.ToLower() != "jpg" || userImageType.ToLower() != "jpeg" || userImageType.ToLower() != "png")
-                    {
-                     throw new Exception("File Type Not Supported");
-                    }
-
-                 else
-                  {
-                    using (var fs = new FileStream(fullPath, FileMode.Create))
-                    {
-                     model.UserImage.CopyTo(fs);
-                    }
-                  }
-
-                }
-                
+          
                 
             applicationUser.FirstName =model.FirstName;
             applicationUser.LastName= model.LastName;
             applicationUser.DateOfBirth = model.DateOfBirth;
             applicationUser.Country = model.Country;
-            applicationUser.ApplicationUserImage = userImage;
+            applicationUser.ApplicationUserImage = model.UserImage;
 
              await _applicationUserRepository.Update(applicationUser);
 

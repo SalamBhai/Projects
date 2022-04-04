@@ -60,17 +60,17 @@ namespace TheLogoPhilia.Implementations
             }
              
              MimeMessage.Subject = Subject;
-             MimeMessage.Body = new TextPart("plain")
-             {
-                   Text = @$"Dear Esteemed User, It's {DateTime.UtcNow} How are you doing?,
-                   {message}",
-             };
+           
              int linkNumber= 1;
              foreach (var item in PostUrls)
              {
                  MimeMessage.Body = new TextPart("html")
                  {
-                     Text = @$"Link {linkNumber++} " + $"<a href={item}/> Click To View Post </a>",
+                     Text = @$"
+                     Dear Esteemed User, It's {DateTime.UtcNow} How are you doing?,
+                       {message}
+                      Link {linkNumber++} "
+                      + $"<a href={item}/> Click To View Post </a>",
                  };
              }
             string EmailAddress = "thelogophilia@gmail.com";

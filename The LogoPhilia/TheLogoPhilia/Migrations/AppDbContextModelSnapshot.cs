@@ -70,6 +70,9 @@ namespace The_LogoPhilia.Migrations
                     b.Property<string>("AdministratorImage")
                         .HasColumnType("text");
 
+                    b.Property<int>("AdministratorType")
+                        .HasColumnType("int");
+
                     b.Property<int>("Age")
                         .HasColumnType("int");
 

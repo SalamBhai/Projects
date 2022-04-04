@@ -18,12 +18,9 @@ namespace TheLogoPhilia.Models
     {
         public string CommentContent{get;set;}
         public int PostId{get;set;}
-        
-      
     }
     public class UpdateApplicationUserCommentModel 
     {
         public string CommentContent{get;set;}
-
     }
 }

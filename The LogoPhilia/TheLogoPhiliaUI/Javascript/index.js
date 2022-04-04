@@ -1,3 +1,3 @@
 setTimeout(function() {
-    location.href = "searchpage.html";
+    location.href = "HomePage.html";
 }, 2000)

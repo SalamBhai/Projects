@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
+using TheLogoPhilia.ApplicationEnums;
 using TheLogoPhilia.Entities;
 
 namespace TheLogoPhilia.Models
@@ -17,6 +18,7 @@ namespace TheLogoPhilia.Models
         public int Age {get;set;}
         public DateTime DateOfBirth{get;set;}
         public string AdministratorCode{get;set;}
+        public AdminType AdministratorType{get;set;}
     }
     public class CreateApplicationAdministratorRequestModel
     {
@@ -33,7 +35,7 @@ namespace TheLogoPhilia.Models
     }
     public class CreateSubAdministratorRequestModel
     {
-        public IFormFile AdminImage {get;set;}
+        public string AdminImage {get;set;}
         public string FirstName {get;set;}
         public string LastName{get;set;}
         public string UserName{get;set;}

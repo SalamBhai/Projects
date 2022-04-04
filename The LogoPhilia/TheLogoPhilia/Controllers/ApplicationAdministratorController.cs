@@ -11,23 +11,42 @@ using TheLogoPhilia.Models;
 namespace TheLogoPhilia.Controllers
 {
     [ApiController]
-      [Route("api/[controller]")]
+    [Route("api/[controller]")]
   
     public class ApplicationAdministratorController: ControllerBase
     {
          private readonly IApplicationAdministratorService _applicationAdministratorService;
+         private readonly IWebHostEnvironment _whostEnvironment;
          
 
-        public ApplicationAdministratorController(IApplicationAdministratorService applicationAdministratorService)
+        public ApplicationAdministratorController(IApplicationAdministratorService applicationAdministratorService,IWebHostEnvironment whe)
         {
             _applicationAdministratorService = applicationAdministratorService;
+            _whostEnvironment= whe;
          
         }
         [HttpPost("CreateApplicationAdministrator")]
           // [Authorize(Roles ="ApplicationAdministrator")]
 
-        public async Task<IActionResult> Create(CreateApplicationAdministratorRequestModel model)
+        public async Task<IActionResult> Create([FromForm]CreateApplicationAdministratorRequestModel model)
         {
+           var files = HttpContext.Request.Form;
+                if(files.Count!=0)
+                {
+                    string PhotoDirectory = Path.Combine(_whostEnvironment.ContentRootPath,"AdminImages");
+                     Directory.CreateDirectory(PhotoDirectory);
+                     foreach (var file in files.Files)
+                     {
+                          FileInfo fileInfo= new FileInfo(file.FileName);
+                          string userImage = "user" + Guid.NewGuid().ToString().Substring(0,7) + $"{fileInfo.Extension}";
+                          string fullPath= Path.Combine(PhotoDirectory,userImage);
+                          using(var fileStream= new FileStream(fullPath,FileMode.Create))
+                          {
+                              file.CopyTo(fileStream);
+                          }
+                          model.AdminImage = fullPath;
+                     }
+                }
   
               var appAdministrator = await _applicationAdministratorService.CreateApplicationAdministrator(model);
               if(!appAdministrator.Success) return BadRequest(appAdministrator);
@@ -35,8 +54,8 @@ namespace TheLogoPhilia.Controllers
 
         }
         [HttpPost("CreateSubAdministrator")]
-        // [Authorize(Roles ="ApplicationAdministrator")]
-        // [Authorize(Roles ="ApplicationSubAdministrator")]
+        [Authorize(Roles ="ApplicationAdministrator")]
+        [Authorize(Roles ="ApplicationSubAdministrator")]
         public async Task<IActionResult> CreateSubAdministrator(CreateSubAdministratorRequestModel model)
         {
           

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -22,8 +23,25 @@ namespace TheLogoPhilia.Controllers
             _webhostEnvironment = webhostEnvironment;
         }
         [HttpPost("CreateApplicationUser")]
-         public async Task<IActionResult> CreateRole([FromBody] ApplicationUserCreateRequestModel model)
+          public async Task<IActionResult> CreateApplicationUser([FromForm] ApplicationUserCreateRequestModel model)
             {
+                var files = HttpContext.Request.Form;
+                if(files.Count!=0)
+                {
+                    string PhotoDirectory = Path.Combine(_webhostEnvironment.ContentRootPath,"UserImages");
+                     Directory.CreateDirectory(PhotoDirectory);
+                     foreach (var file in files.Files)
+                     {
+                          FileInfo fileInfo= new FileInfo(file.FileName);
+                          string userImage = "user" + Guid.NewGuid().ToString().Substring(0,7) + $"{fileInfo.Extension}";
+                          string fullPath= Path.Combine(PhotoDirectory,userImage);
+                          using(var fileStream= new FileStream(fullPath,FileMode.Create))
+                          {
+                              file.CopyTo(fileStream);
+                          }
+                          model.UserImage = fullPath;
+                     }
+                }
              var response = await  _applicationUserService.CreateApplicationUser(model);
              if (!response.Success)
              {
@@ -41,10 +59,11 @@ namespace TheLogoPhilia.Controllers
              }
              return Ok(response);
          }
-        [HttpGet("GetApplicationUser/{Id}")]
-         public async Task<IActionResult> GetApplicationUser([FromRoute]  int Id)
+        [HttpGet("GetLoggedInApplicationUser")]
+         public async Task<IActionResult> GetLoggedInApplicationUser()
            {
-               var response = await  _applicationUserService.Get(Id);
+               var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+               var response = await  _applicationUserService.Get(userId);
               if (!response.Success)
                {
                  return BadRequest(response);

@@ -41,7 +41,7 @@ namespace TheLogoPhilia.Models
     }
     public class ApplicationUserUpdateRequestModel
     {
-         public IFormFile UserImage {get;set;}
+         public string UserImage {get;set;}
           public string FirstName {get;set;}
         public string LastName{get;set;}
         public DateTime DateOfBirth{get;set;}

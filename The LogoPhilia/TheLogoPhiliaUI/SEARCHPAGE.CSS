@@ -440,7 +440,7 @@
                     font-family: "Times New Roman";
                 }
                 
-                .fl2 {
+                .fl2,#fl2{
                     color: blue;
                     font-weight: bold;
                     margin-top: 14px;

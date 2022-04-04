@@ -1,4 +1,5 @@
 using System;
+using TheLogoPhilia.ApplicationEnums;
 
 namespace TheLogoPhilia.Entities
 {
@@ -12,6 +13,7 @@ namespace TheLogoPhilia.Entities
         public User User{get;set;}
         public int Age {get;set;}
         public DateTime DateOfBirth{get;set;}
+        public AdminType AdministratorType{get;set;}
     
         public string AdministratorCode{get;set;}
     }

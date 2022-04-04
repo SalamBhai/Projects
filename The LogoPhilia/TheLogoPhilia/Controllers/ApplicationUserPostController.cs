@@ -68,7 +68,7 @@ namespace TheLogoPhilia.Controllers
            return Ok(post);
         }
         [HttpGet("GetPostOfLoggedInUser")]
-        // [Authorize(Roles = "ApplicationUser")]
+        [Authorize(Roles = "ApplicationUser")]
         public async Task<IActionResult> GetPostOfLoggedInUser()
         {
             var id = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));

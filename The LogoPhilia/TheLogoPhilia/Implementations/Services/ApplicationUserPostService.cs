@@ -29,34 +29,34 @@ namespace TheLogoPhilia.Implementations.Services
         public async Task<BaseResponse<ApplicationUserPostViewModel>> Create(CreateApplicationUserPostViewModel model, int UserId)
         {
             var userInPost = await _UserRepository.GetUser(UserId);
-          //       var videoFile = "";
-          //  if(model.VideoFile != null)
-          //   {
-          //     string wordAudioPath = Path.Combine(_webHostEnvironment.WebRootPath, "AdminImage");
-          //      Directory.CreateDirectory(wordAudioPath);
-          //      string videoFileType = model.VideoFile.ContentType.Split('/')[1];
-          //      videoFile = $"Post/{Guid.NewGuid().ToString().Substring(0,9)}.{videoFileType}";
-          //       var fullPath = Path.Combine(wordAudioPath,videoFile);
-          //       if(videoFileType.ToLower() != "mp4" )
-          //       {
-          //         throw new Exception("File Type Not Supported");
-          //       }
+                var videoFile = "";
+           if(model.VideoFile != null)
+            {
+              string wordAudioPath = Path.Combine(_webHostEnvironment.WebRootPath, "AdminImage");
+               Directory.CreateDirectory(wordAudioPath);
+               string videoFileType = model.VideoFile.ContentType.Split('/')[1];
+               videoFile = $"Post/{Guid.NewGuid().ToString().Substring(0,9)}.{videoFileType}";
+                var fullPath = Path.Combine(wordAudioPath,videoFile);
+                if(videoFileType.ToLower() != "mp4" )
+                {
+                  throw new Exception("File Type Not Supported");
+                }
                
-          //       else
-          //       {
-          //           using (var fs = new FileStream(fullPath, FileMode.Create))
-          //            {
-          //            model.VideoFile.CopyTo(fs);
-          //          }
-          //       }  
-          //   }
+                else
+                {
+                    using (var fs = new FileStream(fullPath, FileMode.Create))
+                     {
+                     model.VideoFile.CopyTo(fs);
+                   }
+                }  
+            }
            var post = new ApplicationUserPost 
            {
                PostContent = model.PostContent,
                DatePosted = DateTime.UtcNow,
                ApplicationUserId = userInPost.ApplicationUser.Id,
                ApplicationUser = userInPost.ApplicationUser,
-               VideoFile = model.VideoFile,
+               VideoFile = videoFile,
                 
            };
            await _appUserPostRepository.Create(post);
@@ -200,8 +200,10 @@ namespace TheLogoPhilia.Implementations.Services
         }
 
         public async Task<BaseResponse<IEnumerable<ApplicationUserPostViewModel>>> GetPostsOfUser(int UserId)
-        {
-            var postsOfUser = await _appUserPostRepository.GetAllPosts(L=> L.ApplicationUserId == UserId);
+        {         
+            var userinPost = await _UserRepository.GetUser(UserId);
+            var userId = userinPost.ApplicationUser.Id;
+             var postsOfUser = await _appUserPostRepository.GetAllPosts(L=> L.ApplicationUserId == userId);
              if(postsOfUser == null) return new BaseResponse<IEnumerable<ApplicationUserPostViewModel>>
           {
            Message = "Post Not Found",
@@ -211,7 +213,7 @@ namespace TheLogoPhilia.Implementations.Services
           
            return new  BaseResponse<IEnumerable<ApplicationUserPostViewModel>>
            {
-               Message = "Update Successful",
+               Message = "User post found Successfully",
                Success =true,
                Data =  postsOfUser.Select(postOfUser=> new ApplicationUserPostViewModel
                {
