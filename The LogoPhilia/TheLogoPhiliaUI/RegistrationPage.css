@@ -6,8 +6,8 @@
     
     body {
         overflow-x: hidden;
-        background-image: url('/tlimages/greybg.png');
         overflow-y: hidden;
+        background-image: url('/tlimages/greybg.png');
     }
     
     .pageBody {
