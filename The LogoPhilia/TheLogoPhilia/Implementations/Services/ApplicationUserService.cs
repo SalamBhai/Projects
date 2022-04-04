@@ -97,7 +97,7 @@ namespace TheLogoPhilia.Implementations.Services
           }
         public async Task<BaseResponse<ApplicationUserViewRequestModel>> Get(int Id)
         {
-           var applicationUser= await _applicationUserRepository.GetUser(Id);
+           var applicationUser= await _applicationUserRepository.GetUserByExpression(L=> L.UserId== Id);
            var user = await _UserRepository.GetUser(applicationUser.UserId);
            
            if(applicationUser == null) return new BaseResponse<ApplicationUserViewRequestModel>
@@ -191,7 +191,7 @@ namespace TheLogoPhilia.Implementations.Services
         public async Task<BaseResponse<ApplicationUserViewRequestModel>> UpdateApplicationUser(ApplicationUserUpdateRequestModel model, int Id)
         {
              
-            var  applicationUser=  await _applicationUserRepository.Get(Id);
+            var  applicationUser=  await _applicationUserRepository.GetUserByExpression(L=> L.UserId==Id);
             if(applicationUser == null)  return new BaseResponse<ApplicationUserViewRequestModel>
             {
                Message =$"Application User With Id  {Id} Not Found",

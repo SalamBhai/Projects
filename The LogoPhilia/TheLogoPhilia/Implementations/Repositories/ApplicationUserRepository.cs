@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TheLogoPhilia.ApplicationDbContext;
@@ -28,6 +29,14 @@ namespace TheLogoPhilia.Implementations.Repositories
             .ThenInclude(L=> L.AdministratorMessage).ThenInclude(L=>L.ApplicationUserAdminMessages).ThenInclude(L=>L.ApplicationUser)
             .Include(L=> L.ApplicationUserComments).Include(L=>  L.ApplicationUserNotes)
             .Include(L=> L.ApplicationUserPosts).Where(L=> L.IsDeleted == false).SingleOrDefaultAsync(L=> L.Id == id);
+   
+        }
+           public async Task<ApplicationUser> GetUserByExpression(Expression<Func<ApplicationUser, bool>> expression)
+        {
+            return await _context.ApplicationUsers.Include(L=> L.User).ThenInclude(L=> L.UserRoles).Include(L=> L.ApplicationUserAdminMessages)
+            .ThenInclude(L=> L.AdministratorMessage).ThenInclude(L=>L.ApplicationUserAdminMessages).ThenInclude(L=>L.ApplicationUser)
+            .Include(L=> L.ApplicationUserComments).Include(L=>  L.ApplicationUserNotes)
+            .Include(L=> L.ApplicationUserPosts).Where(L=> L.IsDeleted == false).SingleOrDefaultAsync(expression);
    
         }
          public async Task<IEnumerable<ApplicationUser>> GetSelectedApplicationUsers(List<int> UserIds)

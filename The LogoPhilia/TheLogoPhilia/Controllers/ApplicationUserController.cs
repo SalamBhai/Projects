@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -60,6 +61,7 @@ namespace TheLogoPhilia.Controllers
              return Ok(response);
          }
         [HttpGet("GetLoggedInApplicationUser")]
+        [Authorize(Roles = "ApplicationUser")]
          public async Task<IActionResult> GetLoggedInApplicationUser()
            {
                var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
